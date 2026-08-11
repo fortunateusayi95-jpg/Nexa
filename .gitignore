@@ -1,0 +1,6 @@
+node_modules/
+.gradle/
+.idea/
+*.iml
+local.properties
+.DS_Store

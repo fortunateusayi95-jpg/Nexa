@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexa 10.0</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f5f8;
+    color:#111;
+}
+
+header{
+    background:#ffffff;
+    padding:18px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    position:sticky;
+    top:0;
+}
+
+.logo{
+    color:#6c2cff;
+}
+
+.container{
+    padding:15px;
+    max-width:600px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:18px;
+    margin-bottom:15px;
+    border-radius:18px;
+    box-shadow:0 3px 10px #0001;
+}
+
+button{
+    background:#6c2cff;
+    color:white;
+    border:0;
+    padding:12px 18px;
+    border-radius:25px;
+    font-weight:bold;
+}
+
+nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:12px;
+    border-top:1px solid #ddd;
+}
+
+nav button{
+    background:none;
+    color:#333;
+    padding:5px;
+}
+
+.hero{
+    background:linear-gradient(135deg,#6c2cff,#ec4899);
+    color:white;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:15px;
+}
+
+input{
+    width:100%;
+    padding:13px;
+    border-radius:25px;
+    border:1px solid #ddd;
+    box-sizing:border-box;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <span class="logo">Nexa</span>
+    <small> 10.0</small>
+</header>
+
+<div class="container">
+
+    <input
+        type="text"
+        placeholder="Discover"
+        onkeyup="search(this.value)"
+    >
+
+    <div class="hero">
+        <h1>Connect Beyond the Screen 🚀</h1>
+        <p>Welcome to Nexa 10.0</p>
+    </div>
+
+    <div class="card">
+        <h2>📖 Stories</h2>
+        <p>Discover stories from people you follow.</p>
+        <button onclick="alert('Stories opened!')">
+            View Stories
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>⚡ Nexa Shorts</h2>
+        <p>Watch short videos and discover something new.</p>
+        <button onclick="alert('Nexa Shorts opened!')">
+            Watch Shorts
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>📸 Nexa Pics</h2>
+        <p>Discover amazing pictures from the Nexa community.</p>
+        <button onclick="alert('Nexa Pics opened!')">
+            Explore Pics
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>🤖 Nexa AI</h2>
+        <p>Your personalized Nexa assistant.</p>
+        <button onclick="ai()">
+            Ask Nexa AI
+        </button>
+    </div>
+
+</div>
+
+<nav>
+    <button onclick="home()">🏠<br>Home</button>
+    <button onclick="discover()">🔍<br>Discover</button>
+    <button onclick="create()">➕<br>Create</button>
+    <button onclick="messages()">💬<br>Messages</button>
+    <button onclick="profile()">👤<br>Profile</button>
+</nav>
+
+<script>
+
+function search(value){
+    console.log("Searching Nexa:",value);
+}
+
+function ai(){
+    alert(
+        "⭐ Nexa AI\n\n"+
+        "Welcome! Nexa AI will personalize "+
+        "your content and help you discover "+
+        "news, sports, technology and education."
+    );
+}
+
+function home(){
+    alert("🏠 Nexa Home");
+}
+
+function discover(){
+    alert("🔍 Discover");
+}
+
+function create(){
+    alert("➕ Create a post");
+}
+
+function messages(){
+    alert("💬 Messages");
+}
+
+function profile(){
+    alert("👤 Your Profile");
+}
+
+</script>
+
+</body>
+</html>
+
