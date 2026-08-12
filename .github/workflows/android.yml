@@ -16,72 +16,52 @@ jobs:
 
     steps:
       - name: Checkout Nexa
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 22
           cache: npm
 
-      - name: Set up Java
-        uses: actions/setup-java@v5
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
           cache: gradle
 
-      - name: Check project
-        run: |
-          echo "Node:"
-          node --version
-          echo "NPM:"
-          npm --version
-          echo "Project files:"
-          ls -la
-
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm install
 
-      - name: Build Nexa web app
+      - name: Build web app
         run: npm run build
 
       - name: Check Android project
         run: |
           if [ ! -d "android" ]; then
-            echo "ERROR: Android folder was not found."
-            echo "The Capacitor Android project must exist before Gradle can build the APK."
+            echo "ERROR: android folder does not exist."
             exit 1
           fi
           echo "Android project found."
-          ls -la android
 
-      - name: Sync Nexa with Capacitor
+      - name: Sync Capacitor
         run: npx cap sync android
 
       - name: Make Gradle executable
-        working-directory: android
-        run: chmod +x gradlew
+        run: chmod +x android/gradlew
 
-      - name: Build Nexa APK
-        working-directory: android
-                run:|
-          echo "=== Gradle version ==="
-          ./gradlew --version
-          echo "=== Starting APK build ==="
-          ./gradlew assembleDebug --stacktrace --info
-
-      - name: Find APK
+      - name: Build Debug APK
         run: |
-          echo "Searching for APK..."
-          find android -type f -name "*.apk" -print
+          cd android
+          ./gradlew assembleDebug --stacktrace
 
-      - name: Upload Nexa APK
+      - name: Check APK
+        run: |
+          echo "Looking for APK..."
+          find android -name "*.apk" -type f
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Nexa-debug-apk
