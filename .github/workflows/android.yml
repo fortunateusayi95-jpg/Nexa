@@ -18,18 +18,25 @@ jobs:
       - name: Checkout Nexa
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: '22'
 
-      - name: Setup Java
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '21'
           cache: gradle
+
+      - name: Verify Java
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          which java
+          which javac
+          java -version
+          javac -version
 
       - name: Install dependencies
         run: npm install
@@ -37,31 +44,29 @@ jobs:
       - name: Build web app
         run: npm run build
 
-      - name: Check Android project
-        run: |
-          if [ ! -d "android" ]; then
-            echo "ERROR: android folder does not exist."
-            exit 1
-          fi
-          echo "Android project found."
-
       - name: Sync Capacitor
         run: npx cap sync android
 
       - name: Make Gradle executable
         run: chmod +x android/gradlew
 
+      - name: Verify Gradle Java
+        working-directory: android
+        run: |
+          ./gradlew --version
+
+      - name: Clean Android build
+        working-directory: android
+        run: ./gradlew clean
+
       - name: Build Debug APK
-        run: |
-          cd android
-          ./gradlew assembleDebug --stacktrace
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace --info
 
-      - name: Check APK
-        run: |
-          echo "Looking for APK..."
-          find android -name "*.apk" -type f
+      - name: Find APK
+        run: find android -type f -name "*.apk" -print
 
-      - name: Upload APK
+      - name: Upload Nexa APK
         uses: actions/upload-artifact@v4
         with:
           name: Nexa-debug-apk
