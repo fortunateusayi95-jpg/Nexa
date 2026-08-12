@@ -70,7 +70,11 @@ jobs:
 
       - name: Build Nexa APK
         working-directory: android
-        run: ./gradlew assembleDebug --stacktrace
+                run: |
+          echo "=== Gradle version ==="
+          ./gradlew --version
+          echo "=== Starting APK build ==="
+          ./gradlew assembleDebug --stacktrace --info
 
       - name: Find APK
         run: |
