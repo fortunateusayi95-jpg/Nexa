@@ -3,36 +3,83 @@ name: Build Nexa APK
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build Nexa Android APK
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Nexa
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
 
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
 
-      - name: Build web app
+      - name: Check project
         run: |
-          npm ci
-          npm run build
+          echo "Node:"
+          node --version
+          echo "NPM:"
+          npm --version
+          echo "Project files:"
+          ls -la
 
-      - name: Sync Capacitor
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Build Nexa web app
+        run: npm run build
+
+      - name: Check Android project
+        run: |
+          if [ ! -d "android" ]; then
+            echo "ERROR: Android folder was not found."
+            echo "The Capacitor Android project must exist before Gradle can build the APK."
+            exit 1
+          fi
+          echo "Android project found."
+          ls -la android
+
+      - name: Sync Nexa with Capacitor
         run: npx cap sync android
 
-      - name: Build APK
+      - name: Make Gradle executable
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: chmod +x gradlew
 
-      - name: Upload APK
+      - name: Build Nexa APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Find APK
+        run: |
+          echo "Searching for APK..."
+          find android -type f -name "*.apk" -print
+
+      - name: Upload Nexa APK
         uses: actions/upload-artifact@v4
         with:
           name: Nexa-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
